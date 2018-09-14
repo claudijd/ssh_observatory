@@ -1,4 +1,4 @@
-service: serverless-rest-api-with-dynamodb
+service: ssh-observatory
 
 frameworkVersion: ">=1.1.0 <2.0.0"
 
@@ -20,48 +20,32 @@ provider:
 
 functions:
   create:
-    handler: todos/create.create
+    handler: scans/create.create
     events:
       - http:
-          path: todos
+          path: scans
           method: post
           cors: true
 
   list:
-    handler: todos/list.list
+    handler: scans/list.list
     events:
       - http:
-          path: todos
+          path: scans
           method: get
           cors: true
 
   get:
-    handler: todos/get.get
+    handler: scans/get.get
     events:
       - http:
-          path: todos/{id}
+          path: scans/{id}
           method: get
-          cors: true
-
-  update:
-    handler: todos/update.update
-    events:
-      - http:
-          path: todos/{id}
-          method: put
-          cors: true
-
-  delete:
-    handler: todos/delete.delete
-    events:
-      - http:
-          path: todos/{id}
-          method: delete
           cors: true
 
 resources:
   Resources:
-    TodosDynamoDbTable:
+    ScansDynamoDbTable:
       Type: 'AWS::DynamoDB::Table'
       DeletionPolicy: Retain
       Properties:

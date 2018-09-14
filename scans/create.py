@@ -10,9 +10,14 @@ dynamodb = boto3.resource('dynamodb')
 
 def create(event, context):
     data = json.loads(event['body'])
-    if 'text' not in data:
+    if 'target' not in data:
         logging.error("Validation Failed")
-        raise Exception("Couldn't create the todo item.")
+        raise Exception("No 'target' was specified.")
+        return
+
+    if 'port' not in data:
+        logging.error("Validation Failed")
+        raise Exception("No 'port' was specified.")
         return
 
     timestamp = int(time.time() * 1000)
@@ -21,8 +26,8 @@ def create(event, context):
 
     item = {
         'id': str(uuid.uuid1()),
-        'text': data['text'],
-        'checked': False,
+        'target': data['target'],
+        'port': data['port'],
         'createdAt': timestamp,
         'updatedAt': timestamp,
     }
