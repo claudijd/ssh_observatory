@@ -1,17 +1,6 @@
-<!--
-title: AWS Serverless REST API with DynamoDB store example in Python
-description: This example demonstrates how to setup a RESTful Web Service allowing you to create, list, get, update and delete Todos. DynamoDB is used to store the data.
-layout: Doc
--->
-# Serverless REST API
+# SSH Observatory
 
-This example demonstrates how to setup a [RESTful Web Services](https://en.wikipedia.org/wiki/Representational_state_transfer#Applied_to_web_services) allowing you to create, list, get, update and delete Todos. DynamoDB is used to store the data. This is just an example and of course you could use any data storage as a backend.
-
-## Structure
-
-This service has a separate directory for all the todo operations. For each operation exactly one file exists e.g. `todos/delete.py`. In each of these files there is exactly one function defined.
-
-The idea behind the `todos` directory is that in case you want to create a service containing multiple resources e.g. users, notes, comments you could do so in the same service. While this is certainly possible you might consider creating a separate service for each resource. It depends on the use-case and your preference.
+A server-less implementation of the ssh observatory
 
 ## Use-cases
 
@@ -35,61 +24,65 @@ serverless deploy
 The expected result should be similar to:
 
 ```bash
-Serverless: Packaging service…
-Serverless: Uploading CloudFormation file to S3…
-Serverless: Uploading service .zip file to S3…
-Serverless: Updating Stack…
-Serverless: Checking Stack update progress…
-Serverless: Stack update finished…
-
+$ serverless deploy
+Serverless: Packaging service...
+Serverless: Excluding development dependencies...
+Serverless: Uploading CloudFormation file to S3...
+Serverless: Uploading artifacts...
+Serverless: Uploading service .zip file to S3 (4.18 KB)...
+Serverless: Validating template...
+Serverless: Updating Stack...
+Serverless: Checking Stack update progress...
+..........................
+Serverless: Stack update finished...
 Service Information
-service: serverless-rest-api-with-dynamodb
+service: ssh-observatory
 stage: dev
 region: us-east-1
+stack: ssh-observatory-dev
 api keys:
   None
 endpoints:
-  POST - https://45wf34z5yf.execute-api.us-east-1.amazonaws.com/dev/todos
-  GET - https://45wf34z5yf.execute-api.us-east-1.amazonaws.com/dev/todos
-  GET - https://45wf34z5yf.execute-api.us-east-1.amazonaws.com/dev/todos/{id}
-  PUT - https://45wf34z5yf.execute-api.us-east-1.amazonaws.com/dev/todos/{id}
-  DELETE - https://45wf34z5yf.execute-api.us-east-1.amazonaws.com/dev/todos/{id}
+  POST - https://kz5f2ztw43.execute-api.us-east-1.amazonaws.com/dev/scans
+  GET - https://kz5f2ztw43.execute-api.us-east-1.amazonaws.com/dev/scans
+  GET - https://kz5f2ztw43.execute-api.us-east-1.amazonaws.com/dev/scans/{id}
 functions:
-  serverless-rest-api-with-dynamodb-dev-update: arn:aws:lambda:us-east-1:488110005556:function:serverless-rest-api-with-dynamodb-dev-update
-  serverless-rest-api-with-dynamodb-dev-get: arn:aws:lambda:us-east-1:488110005556:function:serverless-rest-api-with-dynamodb-dev-get
-  serverless-rest-api-with-dynamodb-dev-list: arn:aws:lambda:us-east-1:488110005556:function:serverless-rest-api-with-dynamodb-dev-list
-  serverless-rest-api-with-dynamodb-dev-create: arn:aws:lambda:us-east-1:488110005556:function:serverless-rest-api-with-dynamodb-dev-create
-  serverless-rest-api-with-dynamodb-dev-delete: arn:aws:lambda:us-east-1:488110005556:function:serverless-rest-api-with-dynamodb-dev-delete
+  create: ssh-observatory-dev-create
+  list: ssh-observatory-dev-list
+  get: ssh-observatory-dev-get
 ```
 
 ## Usage
 
 You can create, retrieve, update, or delete todos with the following commands:
 
-### Create a Todo
+### Create a scan
 
 ```bash
-curl -X POST https://XXXXXXX.execute-api.us-east-1.amazonaws.com/dev/todos --data '{ "text": "Learn Serverless" }'
-```
-
-No output
-
-### List all Todos
-
-```bash
-curl https://XXXXXXX.execute-api.us-east-1.amazonaws.com/dev/todos
+curl -X POST https://XXXXXXX.execute-api.us-east-1.amazonaws.com/dev/scans --data '{ "target": "ssh.mozilla.com", "port": 22 }'
 ```
 
 Example output:
 ```bash
-[{"text":"Deploy my first service","id":"ac90fe80-aa83-11e6-9ede-afdfa051af86","checked":true,"updatedAt":1479139961304},{"text":"Learn Serverless","id":"20679390-aa85-11e6-9ede-afdfa051af86","createdAt":1479139943241,"checked":false,"updatedAt":1479139943241}]%
+{"port": 22, "updatedAt": 1536951946457, "id": "2f8f92ec-b851-11e8-8c13-ee273c03d56e", "createdAt": 1536951946457, "target": "ssh.mozilla.com"}
 ```
 
-### Get one Todo
+### List all scans
+
+```bash
+curl https://XXXXXXX.execute-api.us-east-1.amazonaws.com/dev/scans
+```
+
+Example output:
+```bash
+[{"port": 22, "id": "2f8f92ec-b851-11e8-8c13-ee273c03d56e", "target": "ssh.mozilla.com", "createdAt": 1536951946457, "updatedAt": 1536951946457}, {"port": 22, "id": "2e94de74-b851-11e8-8c13-ee273c03d56e", "target": "ssh.mozilla.com", "createdAt": 1536951944812, "updatedAt": 1536951944812}, {"port": 22, "id": "59d27142-b850-11e8-8c13-ee273c03d56e", "target": "ssh.mozilla.com", "createdAt": 1536951587861, "updatedAt": 1536951587861}]
+```
+
+### Get one scan
 
 ```bash
 # Replace the <id> part with a real id from your todos table
-curl https://XXXXXXX.execute-api.us-east-1.amazonaws.com/dev/todos/<id>
+curl https://XXXXXXX.execute-api.us-east-1.amazonaws.com/dev/scans/<id>
 ```
 
 Example Result:
@@ -97,26 +90,6 @@ Example Result:
 {"text":"Learn Serverless","id":"ee6490d0-aa81-11e6-9ede-afdfa051af86","createdAt":1479138570824,"checked":false,"updatedAt":1479138570824}%
 ```
 
-### Update a Todo
-
-```bash
-# Replace the <id> part with a real id from your todos table
-curl -X PUT https://XXXXXXX.execute-api.us-east-1.amazonaws.com/dev/todos/<id> --data '{ "text": "Learn Serverless", "checked": true }'
-```
-
-Example Result:
-```bash
-{"text":"Learn Serverless","id":"ee6490d0-aa81-11e6-9ede-afdfa051af86","createdAt":1479138570824,"checked":true,"updatedAt":1479138570824}%
-```
-
-### Delete a Todo
-
-```bash
-# Replace the <id> part with a real id from your todos table
-curl -X DELETE https://XXXXXXX.execute-api.us-east-1.amazonaws.com/dev/todos/<id>
-```
-
-No output
 
 ## Scaling
 
