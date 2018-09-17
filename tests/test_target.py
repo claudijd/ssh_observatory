@@ -24,7 +24,17 @@ class TestTarget():
         assert target.valid() is False
         target = Target("192.169.1.1")
         assert target.valid() is True
+        target = Target("10.0.0.0.1")
+        assert target.valid() is False
+        target = Target("172.16.0.0.1")
+        assert target.valid() is False
 
-    def test_ssh_mozilla_com_validity(self):
+    def test_resolves_validity(self):
         target = Target("ssh.mozilla.com")
+        assert target.valid() is True
+        target = Target("notarealdomainname.mozilla.com")
+        assert target.valid() is False
+        target = Target("ssh.mozilla.com")
+        assert target.valid() is True
+        target = Target("github.com")
         assert target.valid() is True
