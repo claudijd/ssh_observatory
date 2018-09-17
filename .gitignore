@@ -1,0 +1,6 @@
+.DS_Store
+*.pyc
+.coverage
+.cache
+*.pytest_cache
+.serverless
