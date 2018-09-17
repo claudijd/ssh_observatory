@@ -7,12 +7,16 @@ import uuid
 import boto3
 dynamodb = boto3.resource('dynamodb')
 
+from scans import Target
+
 
 def create(event, context):
     data = json.loads(event['body'])
-    if 'target' not in data:
-        logging.error("Validation Failed")
-        raise Exception("No 'target' was specified.")
+
+    target = Target(data['target'])
+    if target.valid == False:
+        logging.error("Target Validation Failed")
+        raise Exception("No target or invalid target specified.")
         return
 
     if 'port' not in data:
