@@ -18,18 +18,27 @@ if not API_URL.endswith("/"):
 
 
 def test_api_create():
-    r = requests.post('{}scans'.format(API_URL),
-                      data=json.dumps(
+    req = requests.post('{}scans'.format(API_URL),
+                        data=json.dumps(
         {"target": "ssh.mozilla.com", "port": 22}
     )
     )
-    entry = r.json()
+    entry = req.json()
     assert isinstance(entry, dict)
     assert entry.get('port') == 22
     assert entry.get('target') == "ssh.mozilla.com"
     assert isinstance(entry.get('id'), str)
     assert isinstance(entry.get('createdAt'), int)
     assert isinstance(entry.get('updatedAt'), int)
+
+
+def test_api_create_missing_port():
+    r = requests.post('{}scans'.format(API_URL),
+                      data=json.dumps(
+        {"target": "ssh.mozilla.com"}
+    )
+    )
+    assert r.text() == "port was not specified or port was not valid"
 
 
 def test_api_get():

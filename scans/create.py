@@ -8,21 +8,29 @@ import boto3
 dynamodb = boto3.resource('dynamodb')
 
 from scans import Target
+from scans import Port
 
 
 def create(event, context):
     data = json.loads(event['body'])
 
-    target = Target(data.get('target'))
+    target = Target(data['target'])
     if target.valid() == False:
-        logging.error("Target Validation Failed")
-        raise Exception("No target or invalid target specified.")
-        return
+        logging.error("Target Validation Failed of: " + json.dumps(data))
+        response = {
+            "statusCode": 200,
+            "body": json.dumps({'error': 'target was not specified or target was not valid'})
+        }
+        return response
 
-    if 'port' not in data:
-        logging.error("Validation Failed")
-        raise Exception("No 'port' was specified.")
-        return
+    port = Port(data['port'])
+    if port.valid() == False:
+        logging.error("Port Validation Failed of: " + json.dumps(data))
+        response = {
+            "statusCode": 200,
+            "body": json.dumps({'error': 'port was not specified or port was not valid'})
+        }
+        return response
 
     timestamp = int(time.time() * 1000)
 

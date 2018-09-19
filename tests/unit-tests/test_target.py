@@ -9,6 +9,10 @@ from scans import Target
 
 
 class TestTarget():
+    def test_null_validity(self):
+        target = Target(None)
+        assert target.valid() is False
+
     def test_loopback_validity(self):
         target = Target("127.0.0.1")
         assert target.valid() is False
