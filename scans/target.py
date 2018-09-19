@@ -20,7 +20,6 @@ class Target:
             return False
 
     def valid(self):
-
         starts_with_anti_patterns = [
             '127.0.0',
             '10.',
