@@ -13,7 +13,7 @@ from scans import Target
 def create(event, context):
     data = json.loads(event['body'])
 
-    target = Target(data.get['target'])
+    target = Target(data.get('target'))
     if target.valid() == False:
         logging.error("Target Validation Failed")
         raise Exception("No target or invalid target specified.")
