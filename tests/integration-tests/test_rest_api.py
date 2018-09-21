@@ -18,12 +18,12 @@ if not API_URL.endswith("/"):
 
 
 def test_api_create():
-    req = requests.post('{}scans'.format(API_URL),
-                        data=json.dumps(
+    response = requests.post('{}scans'.format(API_URL),
+                             data=json.dumps(
         {"target": "ssh.mozilla.com", "port": 22}
     )
     )
-    entry = req.json()
+    entry = response.json()
     assert isinstance(entry, dict)
     assert entry.get('port') == 22
     assert entry.get('target') == "ssh.mozilla.com"
@@ -32,18 +32,45 @@ def test_api_create():
     assert isinstance(entry.get('updatedAt'), int)
 
 
+def test_api_create_missing_target():
+    response = requests.post('{}scans'.format(API_URL),
+                             data=json.dumps(
+        {"port": 22}
+    )
+    )
+    assert response.status_code == 200
+    assert response.text == ""
+    entry = response.json()
+    assert isinstance(entry, dict)
+    assert entry.get('error') == 'target was not valid or missing'
+
+
+def test_api_create_missing_port():
+    response = requests.post('{}scans'.format(API_URL),
+                             data=json.dumps(
+        {"target": "ssh.mozilla.com"}
+    )
+    )
+    assert response.status_code == 200
+    assert response.text == ""
+    entry = response.json()
+    assert isinstance(entry, dict)
+    assert entry.get('error') == 'port was not valid or missing'
+
+
 def test_api_get():
-    r = requests.post('{}scans'.format(API_URL),
-                      data=json.dumps(
+    response = requests.post('{}scans'.format(API_URL),
+                             data=json.dumps(
         {"target": "ssh.mozilla.com", "port": 22}
     )
     )
-    entry = r.json()
+    assert response.status_code == 200
+    entry = response.json()
     assert isinstance(entry, dict)
     assert isinstance(entry.get('id'), str)
 
-    r2 = requests.get('{}scans/{}'.format(API_URL, entry.get('id')))
-    entry2 = r2.json()
+    response2 = requests.get('{}scans/{}'.format(API_URL, entry.get('id')))
+    entry2 = response2.json()
 
     assert isinstance(entry2, dict)
     assert isinstance(entry2.get('port'), int)
@@ -59,9 +86,9 @@ def test_api_get():
 
 
 def test_api_list():
-    r = requests.get('{}scans'.format(API_URL))
-    assert isinstance(r.json(), list)
-    for entry in r.json():
+    response = requests.get('{}scans'.format(API_URL))
+    assert isinstance(response.json(), list)
+    for entry in response.json():
         assert isinstance(entry, dict)
         assert isinstance(entry.get('port'), int)
         assert isinstance(entry.get('target'), str)

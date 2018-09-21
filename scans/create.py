@@ -14,7 +14,7 @@ from scans import Port
 def create(event, context):
     data = json.loads(event['body'])
 
-    if not Target(data['target']).valid():
+    if not Target(data.get('target')).valid():
         logging.error("Target Validation Failed of: " +
                       json.dumps(data))
         return {
@@ -22,7 +22,7 @@ def create(event, context):
             "body": json.dumps({'error': 'target was not valid or missing'})
         }
 
-    if not Port(data['port']).valid():
+    if not Port(data.get('port')).valid():
         logging.error("Port Validation Failed of: " + json.dumps(data))
         return {
             "statusCode": 200,

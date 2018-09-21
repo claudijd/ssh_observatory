@@ -23,7 +23,7 @@ class Target:
     def valid(self):
         # Needed for Python2 unicode nuances
         if sys.version_info[0] < 3:
-            if type(input) in [str, unicode]:
+            if not type(self.target) in [str, unicode]:
                 return False
         else:
             if not isinstance(self.target, str):
