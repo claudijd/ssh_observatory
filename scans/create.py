@@ -14,23 +14,20 @@ from scans import Port
 def create(event, context):
     data = json.loads(event['body'])
 
-    target = Target(data['target'])
-    if target.valid() == False:
-        logging.error("Target Validation Failed of: " + json.dumps(data))
-        response = {
+    if not Target(data['target']).valid():
+        logging.error("Target Validation Failed of: " +
+                      json.dumps(data))
+        return {
             "statusCode": 200,
-            "body": json.dumps({'error': 'target was not specified or target was not valid'})
+            "body": json.dumps({'error': 'target was not valid or missing'})
         }
-        return response
 
-    port = Port(data['port'])
-    if port.valid() == False:
+    if not Port(data['port']).valid():
         logging.error("Port Validation Failed of: " + json.dumps(data))
-        response = {
+        return {
             "statusCode": 200,
-            "body": json.dumps({'error': 'port was not specified or port was not valid'})
+            "body": json.dumps({'error': 'port was not valid or missing'})
         }
-        return response
 
     timestamp = int(time.time() * 1000)
 
@@ -44,13 +41,10 @@ def create(event, context):
         'updatedAt': timestamp,
     }
 
-    # write the todo to the database
+    # write the scan to the database
     table.put_item(Item=item)
 
-    # create a response
-    response = {
+    return {
         "statusCode": 200,
         "body": json.dumps(item)
     }
-
-    return response

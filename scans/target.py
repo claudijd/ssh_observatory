@@ -1,4 +1,5 @@
 import socket
+import sys
 
 
 class Target:
@@ -20,8 +21,13 @@ class Target:
             return False
 
     def valid(self):
-        if not isinstance(self.target, str):
-            return False
+        # Needed for Python2 unicode nuances
+        if sys.version_info[0] < 3:
+            if type(input) in [str, unicode]:
+                return False
+        else:
+            if not isinstance(self.target, str):
+                return False
 
         starts_with_anti_patterns = [
             '127.0.0',

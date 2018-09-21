@@ -38,7 +38,11 @@ class TestTarget():
         assert target.valid() is True
         target = Target("notarealdomainname.mozilla.com")
         assert target.valid() is False
+        target = Target(u"notarealdomainname.mozilla.com")
+        assert target.valid() is False
         target = Target("ssh.mozilla.com")
+        assert target.valid() is True
+        target = Target(u'ssh.mozilla.com')
         assert target.valid() is True
         target = Target("github.com")
         assert target.valid() is True

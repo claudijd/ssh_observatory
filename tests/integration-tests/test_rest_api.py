@@ -32,15 +32,6 @@ def test_api_create():
     assert isinstance(entry.get('updatedAt'), int)
 
 
-def test_api_create_missing_port():
-    r = requests.post('{}scans'.format(API_URL),
-                      data=json.dumps(
-        {"target": "ssh.mozilla.com"}
-    )
-    )
-    assert r.text() == "port was not specified or port was not valid"
-
-
 def test_api_get():
     r = requests.post('{}scans'.format(API_URL),
                       data=json.dumps(
