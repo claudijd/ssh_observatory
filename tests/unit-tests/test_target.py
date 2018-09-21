@@ -3,12 +3,16 @@ import sys
 import os
 
 sys.path.append(os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), '../'))
+    os.path.dirname(os.path.abspath(__file__)), '../..'))
 
 from scans import Target
 
 
 class TestTarget():
+    def test_null_validity(self):
+        target = Target(None)
+        assert target.valid() is False
+
     def test_loopback_validity(self):
         target = Target("127.0.0.1")
         assert target.valid() is False
@@ -34,7 +38,11 @@ class TestTarget():
         assert target.valid() is True
         target = Target("notarealdomainname.mozilla.com")
         assert target.valid() is False
+        target = Target(u"notarealdomainname.mozilla.com")
+        assert target.valid() is False
         target = Target("ssh.mozilla.com")
+        assert target.valid() is True
+        target = Target(u'ssh.mozilla.com')
         assert target.valid() is True
         target = Target("github.com")
         assert target.valid() is True
