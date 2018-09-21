@@ -9,7 +9,4 @@ class Port:
         if not isinstance(self.port, int):
             return False
 
-        if self.port == 22:
-            return True
-
-        return False
+        return self.port == 22
