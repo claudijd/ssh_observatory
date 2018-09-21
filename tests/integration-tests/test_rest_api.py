@@ -39,7 +39,6 @@ def test_api_create_missing_target():
     )
     )
     assert response.status_code == 200
-    assert response.text == ""
     entry = response.json()
     assert isinstance(entry, dict)
     assert entry.get('error') == 'target was not valid or missing'
@@ -52,7 +51,6 @@ def test_api_create_missing_port():
     )
     )
     assert response.status_code == 200
-    assert response.text == ""
     entry = response.json()
     assert isinstance(entry, dict)
     assert entry.get('error') == 'port was not valid or missing'
