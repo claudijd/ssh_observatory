@@ -31,6 +31,7 @@ functions:
           method: post
           cors: true
 
+  # TODO: remove this before production, it's really only useful for dev, and could create perf/cost issues in prod
   list:
     handler: scans/list.list
     events:
