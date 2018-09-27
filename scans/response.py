@@ -28,9 +28,11 @@ class Response:
         security_response_dict = self.response_dict.copy()
 
         # initialize headers if not already
-        if not security_response_dict.get("headers"):
+        if "headers" not in security_response_dict:
             security_response_dict["headers"] = {}
 
         for header_name, header_value in self.SECURITY_HEADERS.items():
-            security_response_dict["headers"][header_name] = header_value
+            # Avoid setting security headers which are already set
+            if header_name not in security_response_dict["headers"]:
+                security_response_dict["headers"][header_name] = header_value
         return security_response_dict
