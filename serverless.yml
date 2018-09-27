@@ -47,14 +47,10 @@ functions:
           method: get
           cors: true
 
-# TODO: enabled DynamoDB streams so when we put_item on the create handler, it will trigger a
-# stream handler, that will do the scan immediately (or within a quarter of a sec of create 
-# being called, so no wasted polling to maintain, just happens)
-#
-# streamFunction:
-#     handler: streamFunction.handler
-#     events:
-#       - stream: arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/my_table/stream/2016-11-20T22:55:25.566
+streamFunction:
+    handler: scans.worker
+    events:
+      - stream: arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}/stream/*
 
 resources:
   Resources:
