@@ -38,7 +38,6 @@ def create(event, context):
         'id': str(uuid.uuid1()),
         'target': data['target'],
         'port': data['port'],
-        'status': 'QUEUED',
         'scan': None,
         'createdAt': timestamp,
         'updatedAt': timestamp,
