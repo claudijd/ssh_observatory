@@ -18,7 +18,7 @@ npm install -g serverless
 In order to deploy the endpoint simply run
 
 ```bash
-serverless deploy
+assume-role YOUR_ROLE && serverless deploy
 ```
 
 The expected result should be similar to:
