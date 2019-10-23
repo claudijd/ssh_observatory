@@ -16,8 +16,10 @@ dependencies:scans
 	pip3 install -r requirements.txt
 
 .PHONY: tests ## run all unit tests
-tests:
+unit-tests:
 	pytest tests/unit-tests/
+integration-tests:
+	pytest tests/integration-tests/
 pep8:
 	@find ./* `git submodule --quiet foreach 'echo -n "-path ./$$path -prune -o "'` -type f -name '*.py' -exec pep8 --show-source --max-line-length=100 {} \;
 
