@@ -17,6 +17,10 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
+        - dynamodb:DescribeStream
+        - dynamodb:GetRecords
+        - dynamodb:GetShardIterator
+        - dynamodb:ListStreams
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
 
 functions:
@@ -28,6 +32,7 @@ functions:
           method: post
           cors: true
 
+  # TODO: remove this before production, it's really only useful for dev, and could create perf/cost issues in prod
   list:
     handler: scans/list.list
     events:
@@ -43,6 +48,11 @@ functions:
           path: scans/{id}
           method: get
           cors: true
+
+  streamFunction:
+    handler: scans.worker
+    events:
+      - stream: arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}/stream/*
 
 resources:
   Resources:
