@@ -1,3 +1,6 @@
+from scans import Response
+from scans import Port
+from scans import Target
 import json
 import logging
 import os
@@ -6,10 +9,6 @@ import uuid
 
 import boto3
 dynamodb = boto3.resource('dynamodb')
-
-from scans import Target
-from scans import Port
-from scans import Response
 
 
 def create(event, context):
@@ -38,6 +37,7 @@ def create(event, context):
         'id': str(uuid.uuid1()),
         'target': data['target'],
         'port': data['port'],
+        'scan': None,
         'createdAt': timestamp,
         'updatedAt': timestamp,
     }
