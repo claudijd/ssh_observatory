@@ -87,7 +87,7 @@ curl https://XXXXXXX.execute-api.us-east-1.amazonaws.com/dev/scans/<id>
 
 Example Result:
 ```bash
-{"text":"Learn Serverless","id":"ee6490d0-aa81-11e6-9ede-afdfa051af86","createdAt":1479138570824,"checked":false,"updatedAt":1479138570824}%
+{"port": 22, "id": "2f8f92ec-b851-11e8-8c13-ee273c03d56e", "target": "ssh.mozilla.com", "createdAt": 1536951946457, "updatedAt": 1536951946457}
 ```
 
 ## Unit-testing
