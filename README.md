@@ -101,5 +101,5 @@ make dependencies
 ### Run unit-tests
 
 ```bash
-make tests
+make unit-tests
 ```

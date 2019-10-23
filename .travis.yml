@@ -6,4 +6,4 @@ install:
   - make dependencies
 # command to run tests
 script:
-  - make tests
+  - make unit-tests
