@@ -1,8 +1,5 @@
-from scans import Response
 import os
 import json
-
-from scans import decimalencoder
 import boto3
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table(os.environ['DYNAMODB_TABLE'])
