@@ -40,6 +40,7 @@ def create(event, context):
         'scan': None,
         'createdAt': timestamp,
         'updatedAt': timestamp,
+        'status': "QUEUED"
     }
 
     # write the scan to the database

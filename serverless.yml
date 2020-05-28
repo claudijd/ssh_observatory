@@ -17,6 +17,10 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
+        - dynamodb:DescribeStream
+        - dynamodb:GetRecords
+        - dynamodb:GetShardIterator
+        - dynamodb:ListStreams
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
 
 functions:
@@ -44,11 +48,22 @@ functions:
           method: get
           cors: true
 
+  worker:
+    handler: scans/worker.worker
+    events:
+      - stream:
+          type: dynamodb
+          arn:
+            Fn::GetAtt:
+              - ScansDynamoDbTable
+              - StreamArn
+          batchSize: 1
+
 resources:
   Resources:
     ScansDynamoDbTable:
       Type: 'AWS::DynamoDB::Table'
-      DeletionPolicy: Retain
+      DeletionPolicy: Delete
       Properties:
         AttributeDefinitions:
           -
@@ -62,3 +77,5 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: ${self:provider.environment.DYNAMODB_TABLE}
+        StreamSpecification:
+          StreamViewType: NEW_IMAGE
