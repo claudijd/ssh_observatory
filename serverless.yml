@@ -48,7 +48,21 @@ functions:
           method: get
           cors: true
 
+  # # Python Worker Skeleton
+  # worker:
+  #   handler: scans/worker.worker
+  #   events:
+  #     - stream:
+  #         type: dynamodb
+  #         arn:
+  #           Fn::GetAtt:
+  #             - ScansDynamoDbTable
+  #             - StreamArn
+  #         batchSize: 1
+
+  # Ruby Worker Skeleton
   worker:
+    runtime: ruby2.5
     handler: scans/worker.worker
     events:
       - stream:
