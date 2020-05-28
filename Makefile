@@ -20,12 +20,12 @@ unit-tests:
 	pytest tests/unit-tests/
 integration-tests:
 	pytest tests/integration-tests/
+deploy:
+	serverless deploy
 pep8:
 	@find ./* `git submodule --quiet foreach 'echo -n "-path ./$$path -prune -o "'` -type f -name '*.py' -exec pep8 --show-source --max-line-length=100 {} \;
-
 pylint:
 	@find ./* `git submodule --quiet foreach 'echo -n "-path ./$$path -prune -o "'` -type f -name '*.py' -exec pylint -r no --disable=locally-disabled --rcfile=/dev/null {} \;
-
 clean:
 	rm -f scans/*.pyc tests/unit-tests/*.pyc
 	rm -Rf scans.egg-info
